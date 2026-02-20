@@ -6,7 +6,62 @@
       <a href="#" class="nav-link">Home</a>
       <a href="#" class="nav-link">Products</a>
       <a href="#" class="nav-link">Contact</a>
+      <div class="cart-icon-container" (click)="toggleCart()">
+        <span class="cart-icon">🛒</span>
+        <span *ngIf="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+      </div>
     </nav>
+  </div>
+  
+  <!-- Cart Dropdown -->
+  <div class="cart-dropdown" *ngIf="showCart()">
+    <div class="cart-dropdown-header">
+      <h3>Shopping Cart</h3>
+      <button (click)="toggleCart()" class="close-cart-btn">×</button>
+    </div>
+    
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+      <p>Your cart is empty.</p>
+      <p>Add some products to get started!</p>
+    </div>
+    
+    <div *ngIf="cartItems.length > 0" class="cart-dropdown-content">
+      <div class="cart-dropdown-items">
+        <div class="cart-dropdown-item" *ngFor="let item of cartItems">
+          <div class="dropdown-item-image">
+            <img [src]="item.image" [alt]="item.name" />
+          </div>
+          <div class="dropdown-item-details">
+            <h4>{{ item.name }}</h4>
+            <p class="dropdown-item-price">₱{{ item.price }}</p>
+            <div class="dropdown-item-quantity">
+              <button (click)="updateQuantity(item.name, item.quantity - 1)" class="dropdown-qty-btn">-</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="updateQuantity(item.name, item.quantity + 1)" class="dropdown-qty-btn">+</button>
+            </div>
+          </div>
+          <div class="dropdown-item-actions">
+            <p class="dropdown-item-total">₱{{ (item.price * item.quantity).toFixed(2) }}</p>
+            <button (click)="removeItem(item.name)" class="dropdown-remove-btn">Remove</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="cart-dropdown-summary">
+        <div class="dropdown-summary-row">
+          <span>Total Items:</span>
+          <span>{{ cartItemCount }}</span>
+        </div>
+        <div class="dropdown-summary-row total">
+          <span>Total Price:</span>
+          <span>₱{{ totalPrice.toFixed(2) }}</span>
+        </div>
+        <div class="dropdown-summary-actions">
+          <button (click)="clearCart()" class="clear-cart-btn">Clear Cart</button>
+          <button (click)="checkout()" class="checkout-btn">Checkout</button>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -14,68 +69,7 @@
 <main class="main-content">
   <div class="container">
     <h2 class="section-title">Featured Products</h2>
-    
-    <div class="products-grid">
-      <!-- Product 1 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Floral%20Hair%20Vine.jpg" alt="Floral Hair Vine" />
-        </div>
-        <h3 class="product-name">Floral Hair Vine</h3>
-        <p class="product-price">₱24.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <!-- Product 2 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Ribbon%20Scrunchie.jpg" alt="Ribbon Scrunchie" />
-        </div>
-        <h3 class="product-name">Ribbon Scrunchie</h3>
-        <p class="product-price">₱12.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <!-- Product 3 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Pearl%20Hair%20Clips.jpg" alt="Pearl Hair Clips" />
-        </div>
-        <h3 class="product-name">Pearl Hair Clips</h3>
-        <p class="product-price">₱18.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <!-- Product 4 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Hair%20Clip%20Set.jpg" alt="Hair Clip Set" />
-        </div>
-        <h3 class="product-name">Hair Clip Set</h3>
-        <p class="product-price">₱15.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <!-- Product 5 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Elegant%20Headband.jpg" alt="Elegant Headband" />
-        </div>
-        <h3 class="product-name">Elegant Headband</h3>
-        <p class="product-price">₱22.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <!-- Product 6 -->
-      <div class="product-card">
-        <div class="product-image">
-          <img src="/Images/Bridal%20Hairpiece.jpg" alt="Bridal Hairpiece" />
-        </div>
-        <h3 class="product-name">Bridal Hairpiece</h3>
-        <p class="product-price">₱34.99</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-    </div>
+    <app-products></app-products>
   </div>
 </main>
 
@@ -88,3 +82,59 @@
 </footer>
 
 <router-outlet />
+
+<!-- Checkout Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showCheckoutModal()" (click)="cancelCheckout()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Order Summary</h2>
+      <button (click)="cancelCheckout()" class="modal-close-btn">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="order-items">
+        <div class="order-item" *ngFor="let item of cartItems">
+          <div class="order-item-info">
+            <span class="order-item-name">{{ item.name }}</span>
+            <span class="order-item-quantity">x{{ item.quantity }}</span>
+          </div>
+          <span class="order-item-price">₱{{ (item.price * item.quantity).toFixed(2) }}</span>
+        </div>
+      </div>
+      <div class="order-totals">
+        <div class="order-total-row">
+          <span>Total Items:</span>
+          <span>{{ cartItemCount }}</span>
+        </div>
+        <div class="order-total-row grand-total">
+          <span>Total Price:</span>
+          <span>₱{{ totalPrice.toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="cancelCheckout()" class="modal-btn cancel-btn">Cancel</button>
+      <button (click)="confirmCheckout()" class="modal-btn confirm-btn">Proceed with Checkout</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" *ngIf="showSuccessModal()" (click)="closeSuccessModal()">
+  <div class="modal-content success-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>✅ Order Placed Successfully!</h2>
+      <button (click)="closeSuccessModal()" class="modal-close-btn">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="success-content">
+        <div class="success-icon">✓</div>
+        <p class="success-message">Thank you for your purchase!</p>
+        <p class="success-total">Total: ₱{{ lastOrderTotal().toFixed(2) }}</p>
+        <p class="success-note">Your order will be processed shortly.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeSuccessModal()" class="modal-btn confirm-btn">Close</button>
+    </div>
+  </div>
+</div>
