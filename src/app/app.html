@@ -1,0 +1,90 @@
+<!-- Header -->
+<header class="header">
+  <div class="container">
+    <h1 class="logo">{{ title() }}</h1>
+    <nav class="nav">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">Products</a>
+      <a href="#" class="nav-link">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+    
+    <div class="products-grid">
+      <!-- Product 1 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Floral%20Hair%20Vine.jpg" alt="Floral Hair Vine" />
+        </div>
+        <h3 class="product-name">Floral Hair Vine</h3>
+        <p class="product-price">₱24.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Ribbon%20Scrunchie.jpg" alt="Ribbon Scrunchie" />
+        </div>
+        <h3 class="product-name">Ribbon Scrunchie</h3>
+        <p class="product-price">₱12.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Pearl%20Hair%20Clips.jpg" alt="Pearl Hair Clips" />
+        </div>
+        <h3 class="product-name">Pearl Hair Clips</h3>
+        <p class="product-price">₱18.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Hair%20Clip%20Set.jpg" alt="Hair Clip Set" />
+        </div>
+        <h3 class="product-name">Hair Clip Set</h3>
+        <p class="product-price">₱15.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Elegant%20Headband.jpg" alt="Elegant Headband" />
+        </div>
+        <h3 class="product-name">Elegant Headband</h3>
+        <p class="product-price">₱22.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="product-card">
+        <div class="product-image">
+          <img src="/Images/Bridal%20Hairpiece.jpg" alt="Bridal Hairpiece" />
+        </div>
+        <h3 class="product-name">Bridal Hairpiece</h3>
+        <p class="product-price">₱34.99</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2026 {{ title() }}. All rights reserved.</p>
+    <p>Beautiful hair accessories for every occasion</p>
+  </div>
+</footer>
+
+<router-outlet />
